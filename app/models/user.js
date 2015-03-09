@@ -4,19 +4,16 @@ var mongoose = require('mongoose');
 
 
 var userSchema = mongoose.Schema({
-  username: {type: STRING, required: true, index: {unique: true}},
-  password: {type: STRING, required: true}
+  username: {type: String, required: true, index: {unique: true}},
+  password: {type: String, required: true}
 });
 
 var User = mongoose.model('User', userSchema);
 
 User.comparePassword = function(enteredPassword, savedPassword, cb) {
   bcrypt.compare(enteredPassword, savedPassword, function(err, matched) {
-    if (err) {
-      return cb(err);
-    } else {
-      cb(null, matched);
-    }
+    if (err) return cb(err);
+    cb(null, matched);
   });
 };
 
@@ -25,7 +22,7 @@ userSchema.pre('save', function(next) {
   return cipher(this.password, null, null).bind(this)
     .then(function(hash) {
       this.password = hash;
-      next():
+      next();
     });
 });
 
